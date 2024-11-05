@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Génération du document...</p>
+    </div>
+    <div class="thank-you-message" id="thankYouMessage">
+        <p>✨ Merci d'avoir utilisé notre template ! 😊</p>
+    </div>
+    <h1>Formulaire PDF</h1>
+    <form id="pdfForm" action="/submit" method="POST" onsubmit="showLoading()">
+        <div class="form-group">
+            <div class="input-container">
+                <label for="date">Date :</label>
+                <input type="text" id="date" name="date" value="2024-11-05" required>
+            </div>
+            <div class="input-container">
+                <label for="foundationYear">Année de fondation :</label>
+                <input type="text" id="foundationYear" name="foundationYear" value="2010" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-container">
+                <label for="companyName">Nom de l'entreprise :</label>
+                <input type="text" id="companyName" name="companyName" value="Entreprise Test" required>
+            </div>
+            <div class="input-container">
+                <label for="sector">Secteur d'activité :</label>
+                <input type="text" id="sector" name="sector" value="Technologie" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-container">
+                <label for="employeeCount">Nombre d'employés :</label>
+                <input type="number" id="employeeCount" name="employeeCount" value="150" required>
+            </div>
+            <div class="input-container">
+                <label for="siteCount">Nombre de sites :</label>
+                <input type="number" id="siteCount" name="siteCount" value="3" required>
+            </div>
+        </div>
+        <div class="input-container">
+            <label for="zone">Région/Zone géographique :</label>
+            <input type="text" id="zone" name="zone" value="Île-de-France" required>
+        </div>
+        <div class="input-container">
+            <label for="address">Adresse :</label>
+            <input type="text" id="address" name="address" value="123 Rue Exemple" required>
+        </div>
+        <div class="form-group">
+            <div class="input-container">
+                <label for="dpoEmail">Mail DPO :</label>
+                <input type="email" id="dpoEmail" name="dpoEmail" value="dpo@entreprise.com" required>
+            </div>
+            <div class="input-container">
+                <label for="siren">SIREN :</label>
+                <input type="text" id="siren" name="siren" value="123456789" required>
+            </div>
+        </div>
+        <button type="submit" onclick="simulateDownload()">Générer PDF</button>
+    </form>
+
+    <script>
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function simulateDownload() {
+            // Simule le téléchargement (cette fonction doit être ajustée selon la manière dont le fichier est téléchargé)
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('thankYouMessage').style.display = 'block';
+            }, 3000); // Ajustez le délai pour correspondre à la durée du téléchargement réel
+        }
+    </script>
+</body>
+</html>
