@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const PizZip = require('pizzip');
-const { port } = require('./config');
+const { PORT } = require('./config');
 const Docxtemplater = require('docxtemplater');
 
 const app = express();
