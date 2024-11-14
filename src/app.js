@@ -2,21 +2,21 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const PizZip = require('pizzip');
+const { port } = require('./config');
 const Docxtemplater = require('docxtemplater');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Servir les fichiers statiques (index.html)
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files (index.html)
 
-// Fonction pour supprimer uniquement le surlignage jaune dans le contenu XML
+// Function to remove only the yellow highlighting in the XML content
 function removeHighlighting(content) {
-    // Supprime uniquement les balises <w:shd> avec l'attribut de couleur de fond jaune sans toucher aux autres styles
+    // Remove only <w:shd> tags with yellow background color attribute without affecting other styles
     return content.replace(/<w:shd [^>]*w:fill="(?:yellow|ffe599|lightYellow)"[^>]*\/>/g, '');
 }
 
-
-// Fonction pour traiter tous les fichiers XML (corps, headers, footers)
+// Function to process all XML files (body, headers, footers)
 function processXmlFiles(zip) {
     const filesToModify = [
         'word/document.xml',
@@ -24,7 +24,7 @@ function processXmlFiles(zip) {
         'word/header2.xml',
         'word/footer1.xml',
         'word/footer2.xml'
-        // Ajoutez d'autres fichiers si nécessaire (header3.xml, footer3.xml, etc.)
+        // Add other files if necessary (header3.xml, footer3.xml, etc.)
     ];
 
     filesToModify.forEach((fileName) => {
@@ -36,7 +36,7 @@ function processXmlFiles(zip) {
     });
 }
 
-// Route pour recevoir le formulaire et générer le DOCX
+// Route to receive the form and generate the DOCX
 app.post('/submit', (req, res) => {
     const data = {
         'DATE': req.body.date,
@@ -52,8 +52,8 @@ app.post('/submit', (req, res) => {
     };
 
     try {
-        // Charger le modèle DOCX
-        const templatePath = path.resolve(__dirname, 'Template', 'PSSI_Guardia.docx');
+        // Load the DOCX template
+        const templatePath = path.resolve(__dirname, '../Template', 'PSSI_Template.docx');
         const content = fs.readFileSync(templatePath, 'binary');
         const zip = new PizZip(content);
 
@@ -62,33 +62,32 @@ app.post('/submit', (req, res) => {
             linebreaks: true,
         });
 
-        // Remplacer les balises par les données du formulaire
+        // Replace the tags with the form data
         doc.render(data);
 
-        // Générer le fichier DOCX et récupérer le contenu en tant que ZIP
+        // Generate the DOCX file and get the content as ZIP
         const buf = doc.getZip().generate({ type: 'nodebuffer' });
         const outputZip = new PizZip(buf);
 
-        // Supprimer le surlignage jaune dans les fichiers pertinents
+        // Remove the yellow highlighting in the relevant files
         processXmlFiles(outputZip);
 
-        // Générer le fichier mis à jour
+        // Generate the updated file
         const updatedBuf = outputZip.generate({ type: 'nodebuffer' });
 
-        // Définir le type de réponse pour le téléchargement
+        // Set the response type for download
         res.setHeader('Content-Disposition', 'attachment; filename=output.docx');
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         
-        // Envoyer le fichier au client
+        // Send the file to the client
         res.send(updatedBuf);
     } catch (error) {
-        console.error('Erreur lors de la génération du fichier DOCX :', error);
-        res.status(500).send('Erreur lors de la génération du fichier DOCX');
+        console.error('Error generating the DOCX file:', error);
+        res.status(500).send('Error generating the DOCX file');
     }
 });
 
-// Démarrer le serveur
-const PORT = process.env.PORT || 3000;
+// Start the server
 app.listen(PORT, () => {
-    console.log(`Serveur en écoute sur http://localhost:${PORT}`);
+    console.log(`Server listening on http://localhost:${PORT}`);
 });
