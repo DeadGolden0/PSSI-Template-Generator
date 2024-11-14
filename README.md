@@ -39,7 +39,7 @@ OR
 node src/app.js
 ```
 
-Once the server is running, open a browser and navigate to http://localhost:<PORT> to access the form. Fill out the required information to generate your custom PSSI document.
+Once the server is running, open a browser and navigate to http://localhost:PORT to access the form. Fill out the required information to generate your custom PSSI document.
 
 ## 🤝 Contributing
 
